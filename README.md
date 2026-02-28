@@ -1,8 +1,6 @@
-# 🗓️ AllocateMinus
-
 <br />
 <div align="center">
-  <h3 align="center">AllocateMinus</h3>
+  <h1 align="center">AllocateMinus</h3>
 
   <p align="center">
     A Python-powered scheduling engine that finds overlapping free time for students.
