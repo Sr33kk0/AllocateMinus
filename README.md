@@ -5,7 +5,7 @@
   <h3 align="center">AllocateMinus</h3>
 
   <p align="center">
-    A Python-powered scheduling engine that finds overlapping free time for Monash students.
+    A Python-powered scheduling engine that finds overlapping free time for students.
     <br />
     <br />
     <a href="https://github.com/Sr33kk0/AllocateMinus/issues">Report Bug</a>
@@ -30,7 +30,7 @@
 
 ## About The Project
 
-**AllocateMinus** isn't just another calendar viewer. Monash University uses **Allocate+** to distribute student timetables. While great for individuals, finding overlapping free time for a group project or study session requires manually cross-referencing multiple complex schedules over WhatsApp. 
+**AllocateMinus** isn't just another calendar viewer. Finding overlapping free time for a group project or study session requires manually cross-referencing multiple complex schedules over WhatsApp. 
 
 I built this engine to solve that. By ingesting live `.ical` feeds and running an interval-overlap algorithm, the application calculates the exact time blocks where everyone in your group is free.
 
@@ -95,7 +95,7 @@ If using the compiled `.exe` version, simply double-click `AllocateMinus.exe` to
 
 * **Objective**: Find the exact times you and your friends are free to meet up on campus.
 * **Mechanics**: 
-    1. Paste your live Monash Allocate+ `.ical` link into the input field.
+    1. Paste your live  Allocate+ `.ical` link into the input field.
     2. Click **"Add another person"** to add as many group members as you need.
     3. Hit **Calculate**, and the engine will display the overlapping free blocks.
 
