@@ -1,4 +1,4 @@
-# 🗓️ AllocateMinus: The Monash Group Scheduler
+# 🗓️ AllocateMinus
 
 <br />
 <div align="center">
