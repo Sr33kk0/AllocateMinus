@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AllocateMinus - Find Group Free Time</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-gradient-to-br from-indigo-50 via-white to-purple-50 min-h-screen text-slate-800 font-sans antialiased selection:bg-indigo-200">
+
+    <div class="max-w-4xl mx-auto pt-12 pb-24 px-4 sm:px-6 lg:px-8">
+
+        <!-- Header -->
+        <div class="text-center mb-12 animate-fade-in-down">
+            <h1
+                class="text-4xl md:text-5xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-purple-600 mb-4">
+                AllocateMinus
+            </h1>
+            <p class="text-lg text-slate-600 max-w-2xl mx-auto">
+                Paste your group's Monash Allocate+ `.ics` links below to instantly find overlapping free time.
+            </p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+
+            <!-- Left Column: Input Form -->
+            <div class="lg:col-span-5">
+                <div
+                    class="glass-panel rounded-2xl shadow-xl shadow-indigo-100/50 p-6 sm:p-8 transition-all hover:shadow-2xl hover:shadow-indigo-100 duration-300">
+                    <h2 class="text-xl font-semibold text-slate-800 mb-6 flex items-center">
+                        <svg class="w-5 h-5 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1">
+                            </path>
+                        </svg>
+                        Calendar Links
+                    </h2>
+
+                    <form id="schedule-form" class="space-y-4">
+                        <div id="url-inputs-container" class="space-y-3">
+                            <!-- We start with 2 inputs as requested -->
+                            <div class="relative group">
+                                <input type="url" required placeholder="https://my-timetable.monash.edu/..."
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm outline-none placeholder:text-slate-400 ical-input shadow-sm">
+                            </div>
+                            <div class="relative group">
+                                <input type="url" required placeholder="https://my-timetable.monash.edu/..."
+                                    class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm outline-none placeholder:text-slate-400 ical-input shadow-sm">
+                            </div>
+                        </div>
+
+                        <button type="button" id="add-url-btn"
+                            class="w-full py-3 px-4 rounded-xl border-2 border-dashed border-slate-300 text-slate-500 font-medium hover:border-indigo-400 hover:text-indigo-600 hover:bg-indigo-50/50 transition-all flex items-center justify-center group focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                            <svg class="w-5 h-5 mr-2 group-hover:scale-110 transition-transform" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Add Another Member
+                        </button>
+
+                        <!-- Configuration Settings Panel -->
+                        <div class="mt-8 pt-6 border-t border-slate-100">
+                            <h3 class="text-sm font-semibold text-slate-800 mb-4 px-1 flex items-center">
+                                <svg class="w-4 h-4 mr-1.5 text-slate-400" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                                    </path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                </svg>
+                                Search Parameters
+                            </h3>
+
+                            <div class="grid grid-cols-2 gap-4">
+                                <!-- Date Range -->
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-medium text-slate-500 px-1">Start Date</label>
+                                    <input type="date" id="start-date"
+                                        class="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm outline-none shadow-sm text-slate-700">
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-medium text-slate-500 px-1">End Date</label>
+                                    <input type="date" id="end-date"
+                                        class="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm outline-none shadow-sm text-slate-700">
+                                </div>
+
+                                <!-- Daily Hours -->
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-medium text-slate-500 px-1">Daily Start
+                                        (Hour)</label>
+                                    <div class="relative">
+                                        <select id="start-hour"
+                                            class="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm outline-none shadow-sm text-slate-700 appearance-none">
+                                            <option value="6">06:00 AM</option>
+                                            <option value="7">07:00 AM</option>
+                                            <option value="8" selected>08:00 AM</option>
+                                            <option value="9">09:00 AM</option>
+                                            <option value="10">10:00 AM</option>
+                                            <option value="11">11:00 AM</option>
+                                        </select>
+                                        <div
+                                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="space-y-1.5">
+                                    <label class="block text-xs font-medium text-slate-500 px-1">Daily End
+                                        (Hour)</label>
+                                    <div class="relative">
+                                        <select id="end-hour"
+                                            class="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm outline-none shadow-sm text-slate-700 appearance-none">
+                                            <option value="15">03:00 PM</option>
+                                            <option value="16">04:00 PM</option>
+                                            <option value="17">05:00 PM</option>
+                                            <option value="18" selected>06:00 PM</option>
+                                            <option value="19">07:00 PM</option>
+                                            <option value="20">08:00 PM</option>
+                                            <option value="21">09:00 PM</option>
+                                            <option value="22">10:00 PM</option>
+                                        </select>
+                                        <div
+                                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="pt-4 mt-6 border-t border-slate-100">
+                            <button type="submit" id="submit-btn"
+                                class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold py-3.5 px-4 rounded-xl shadow-lg shadow-indigo-200 hover:shadow-xl hover:shadow-indigo-300 hover:-translate-y-0.5 transition-all focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 flex justify-center items-center">
+                                <span id="btn-text">Find Free Time</span>
+                                <svg id="btn-spinner" class="animate-spin ml-2 h-5 w-5 text-white hidden"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                        stroke-width="4"></circle>
+                                    <path class="opacity-75" fill="currentColor"
+                                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                    </path>
+                                </svg>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Column: Results Area -->
+            <div class="lg:col-span-7 h-full">
+                <!-- Change to a fixed height (e.g. h-[650px]) or calc height if needed. We use h-[650px] or similar fixed scale to lock it -->
+                <div
+                    class="glass-panel rounded-2xl shadow-xl shadow-slate-200/50 p-6 sm:p-8 flex flex-col relative overflow-hidden transition-all duration-500 h-[700px]">
+
+                    <!-- decorative blob -->
+                    <div
+                        class="absolute -top-24 -right-24 w-48 h-48 bg-purple-200 rounded-full mix-blend-multiply filter blur-2xl opacity-50 animate-blob">
+                    </div>
+                    <div
+                        class="absolute -bottom-24 -left-24 w-48 h-48 bg-indigo-200 rounded-full mix-blend-multiply filter blur-2xl opacity-50 animate-blob animation-delay-2000">
+                    </div>
+
+                    <div class="relative z-10 flex flex-col h-full">
+                        <div class="flex justify-between items-end mb-6 border-b border-slate-100 pb-4">
+                            <h2 class="text-xl font-semibold text-slate-800 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                Available Slots
+                            </h2>
+                            <span id="event-stats"
+                                class="text-xs font-medium bg-slate-100 text-slate-500 py-1.5 px-3 rounded-full opacity-0 transition-opacity"></span>
+                        </div>
+
+                        <!-- Results Container -->
+                        <div id="results-container" class="flex-grow overflow-y-auto pr-2 space-y-6">
+
+                            <!-- Empty State -->
+                            <div id="empty-state"
+                                class="h-full flex flex-col items-center justify-center text-center text-slate-400 py-12">
+                                <svg class="w-16 h-16 mb-4 text-slate-200" fill="none" stroke="currentColor"
+                                    viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                        d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                    </path>
+                                </svg>
+                                <p
+                                    class="text-sm border border-slate-200 bg-slate-50 rounded-lg px-4 py-2 inline-block">
+                                    Awaiting input URLs to calculate overlaps...</p>
+                            </div>
+
+                            <!-- Dynamic Content gets injected here by JS -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('schedule-form');
+            const addUrlBtn = document.getElementById('add-url-btn');
+            const urlInputsContainer = document.getElementById('url-inputs-container');
+            const submitBtn = document.getElementById('submit-btn');
+            const btnText = document.getElementById('btn-text');
+            const btnSpinner = document.getElementById('btn-spinner');
+            const resultsContainer = document.getElementById('results-container');
+            const emptyState = document.getElementById('empty-state');
+            const eventStats = document.getElementById('event-stats');
+
+            // 1. Logic to dynamically add URL input fields
+            addUrlBtn.addEventListener('click', () => {
+                const inputGroup = document.createElement('div');
+                inputGroup.className = 'relative group animate-fade-in';
+
+                inputGroup.innerHTML = `
+                    <input type="url" required placeholder="https://my-timetable.monash.edu/..." class="w-full px-4 py-3 rounded-xl border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm outline-none placeholder:text-slate-400 ical-input shadow-sm pr-10">
+                    <button type="button" class="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors focus:outline-none" onclick="this.parentElement.remove()">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                    </button>
+                `;
+                urlInputsContainer.appendChild(inputGroup);
+            });
+
+            // Setup form defaults
+            const todayObj = new Date();
+            const startInput = document.getElementById('start-date');
+            const endInput = document.getElementById('end-date');
+            const startHourInput = document.getElementById('start-hour');
+            const endHourInput = document.getElementById('end-hour');
+
+            // Format YYYY-MM-DD for the HTML date inputs
+            startInput.valueAsDate = todayObj;
+
+            const futureObj = new Date();
+            futureObj.setDate(todayObj.getDate() + 4);
+            endInput.valueAsDate = futureObj;
+
+            // 2. Form submission intercept
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+
+                // Get all values
+                const inputs = document.querySelectorAll('.ical-input');
+                const urls = Array.from(inputs).map(input => input.value).filter(val => val.trim() !== '');
+
+                if (urls.length === 0) return;
+
+                // Get Constraint values
+                const startDateStr = startInput.value;
+                const endDateStr = endInput.value;
+                const startHour = parseInt(startHourInput.value, 10);
+                const endHour = parseInt(endHourInput.value, 10);
+
+                const startD = new Date(startDateStr);
+                const endD = new Date(endDateStr);
+
+                if (startD > endD) {
+                    renderError("Start Date cannot be later than End Date.");
+                    return;
+                }
+
+                if (startHour >= endHour) {
+                    renderError("Start Hour must be earlier than the End Hour.");
+                    return;
+                }
+
+                // UI Loading State
+                setLoadingState(true);
+
+                try {
+                    // 3. Make the POST request
+                    const payload = {
+                        urls: urls,
+                        start_date: startDateStr,
+                        end_date: endDateStr,
+                        start_hour: startHour,
+                        end_hour: endHour
+                    };
+
+                    const response = await fetch('/api/calculate', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        throw new Error(`Server returned ${response.status}`);
+                    }
+
+                    const data = await response.json();
+
+                    // 4. Render the results
+                    renderResults(data);
+
+                } catch (error) {
+                    console.error('API Error:', error);
+                    renderError("Failed to calculate free time. Please ensure the URLs are valid and accessible.");
+                } finally {
+                    setLoadingState(false);
+                }
+            });
+
+            function setLoadingState(isLoading) {
+                submitBtn.disabled = isLoading;
+                if (isLoading) {
+                    submitBtn.classList.add('opacity-90', 'cursor-not-allowed');
+                    btnText.textContent = 'Calculating...';
+                    btnSpinner.classList.remove('hidden');
+
+                    // Fade out current results
+                    if (!emptyState) {
+                        resultsContainer.style.opacity = '0.5';
+                    }
+                } else {
+                    submitBtn.classList.remove('opacity-90', 'cursor-not-allowed');
+                    btnText.textContent = 'Find Free Time';
+                    btnSpinner.classList.add('hidden');
+                    resultsContainer.style.opacity = '1';
+                }
+            }
+
+            function groupSlotsByDay(slots) {
+                const grouped = {};
+                slots.forEach(slot => {
+                    // Convert '2026-02-27 08:30' into a clean date string like 'Friday, Feb 27'
+                    const dateObj = new Date(slot.start_iso);
+                    const dayKey = dateObj.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric', year: 'numeric' });
+
+                    if (!grouped[dayKey]) grouped[dayKey] = [];
+
+                    // Format time cleanly e.g. "08:30 AM"
+                    const timeWindow = `${dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} - ${new Date(slot.end_iso).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
+
+                    grouped[dayKey].push(timeWindow);
+                });
+                return grouped;
+            }
+
+            function renderResults(data) {
+                // Remove empty state
+                if (emptyState) emptyState.remove();
+
+                // Update stats counter
+                eventStats.textContent = `${data.events_processed} unique blocks checked`;
+                eventStats.classList.remove('opacity-0');
+
+                if (data.free_slots.length === 0) {
+                    resultsContainer.innerHTML = `
+                        <div class="bg-amber-50 border border-amber-200 rounded-xl p-5 text-amber-700 animate-fade-in flex items-start">
+                            <svg class="w-6 h-6 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            <div>
+                                <h3 class="font-bold">No overlapping free time found!</h3>
+                                <p class="text-sm mt-1 opacity-90">There are no 30-minute intervals within the 8:00 AM to 6:00 PM boundary where everyone is free.</p>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+
+                const groupedSlots = groupSlotsByDay(data.free_slots);
+                let html = '';
+
+                let currentScrollPos = resultsContainer.scrollTop;
+
+                // Build HTML for each day
+                for (const [day, timeSlots] of Object.entries(groupedSlots)) {
+                    html += `
+                        <div class="mb-6 animate-fade-in">
+                            <h3 class="text-sm font-bold text-slate-800 uppercase tracking-wider mb-3 flex items-center bg-slate-100/50 inline-block px-3 py-1 rounded-md">
+                                ${day}
+                            </h3>
+                            <div class="flex flex-wrap gap-2">
+                                ${timeSlots.map(time => `
+                                    <div class="bg-white border text-center border-indigo-100 hover:border-indigo-300 text-indigo-700 font-medium text-sm py-2 px-3.5 rounded-lg shadow-sm hover:shadow-md transition-all cursor-default flex items-center group">
+                                        <svg class="w-3.5 h-3.5 mr-1.5 opacity-60 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                        ${time}
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                resultsContainer.innerHTML = html;
+
+                // Keep the scrollbar at the top (or where it was) after heavy DOM insertion
+                resultsContainer.scrollTop = 0;
+            }
+
+            function renderError(message) {
+                if (emptyState) emptyState.remove();
+                eventStats.classList.add('opacity-0');
+
+                resultsContainer.innerHTML = `
+                    <div class="bg-red-50 border border-red-200 rounded-xl p-5 text-red-700 animate-fade-in flex items-start shadow-sm">
+                        <svg class="w-6 h-6 mr-3 mt-0.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <div>
+                            <h3 class="font-bold">Error Processing Request</h3>
+                            <p class="text-sm mt-1 text-red-600/90">${message}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+    </script>
+
+    <style>
+        /* Small utility animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.4s ease-out forwards;
+        }
+
+        .animate-fade-in-down {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+
+        @keyframes blob {
+            0% {
+                transform: translate(0px, 0px) scale(1);
+            }
+
+            33% {
+                transform: translate(30px, -50px) scale(1.1);
+            }
+
+            66% {
+                transform: translate(-20px, 20px) scale(0.9);
+            }
+
+            100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+        }
+
+        .animate-blob {
+            animation: blob 7s infinite;
+        }
+
+        .animation-delay-2000 {
+            animation-delay: 2s;
+        }
+    </style>
+</body>
+
+</html>

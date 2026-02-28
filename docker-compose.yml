@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  allocateminus:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONUNBUFFERED=1
+    # Run with reload enabled for easier local development
+    command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
