@@ -1,6 +1,8 @@
+# 🗓️ AllocateMinus
+
 <br />
 <div align="center">
-  <h1 align="center">AllocateMinus</h3>
+  <h3 align="center">AllocateMinus</h3>
 
   <p align="center">
     A Python-powered scheduling engine that finds overlapping free time for students.
@@ -105,7 +107,7 @@ If using the compiled `.exe` version, simply double-click `AllocateMinus.exe` to
 - [x] Implement multi-calendar overlap algorithm
 - [x] Build RESTful API using FastAPI
 - [x] Create native Windows Executable via PyInstaller + PyWebView
-- [ ] Implement **Interval Merging Algorithm** (Combine consecutive 30-min blocks into continuous sessions)
+- [x] Implement **Interval Merging Algorithm** (Combine consecutive 30-min blocks into continuous sessions)
 - [ ] Add one-click **Google Calendar invite** generation
 
 ---

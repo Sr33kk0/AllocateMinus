@@ -10,6 +10,20 @@ except AttributeError:
 
 from ics import Calendar
 
+def merge_intervals(slots):
+    if not slots:
+        return []
+    
+    slots.sort(key=lambda x: x[0])
+    merged = [slots[0]]
+    for current in slots[1:]:
+        previous = merged[-1]
+        if current[0] <= previous[1]:
+            merged[-1] = (previous[0], max(previous[1], current[1]))
+        else:
+            merged.append(current)
+    return merged
+
 def fetch_busy_times(calendar_url):
     """
     Fetches the iCalendar URL using requests, parses the text using Calendar(), 
@@ -29,7 +43,7 @@ def fetch_busy_times(calendar_url):
         print(f"Error parsing calendar data: {e}")
         return []
 
-def find_group_free_time(urls, start_date=None, end_date=None, start_hour=8, end_hour=18):
+def find_group_free_time(urls, start_date=None, end_date=None, start_hour=8, end_hour=18, min_duration_minutes=30):
     """
     Core engine loop to find overlapping free time windows for a group.
     
@@ -75,6 +89,13 @@ def find_group_free_time(urls, start_date=None, end_date=None, start_hour=8, end
             
         current_check_date = current_check_date.shift(days=1)
         
-    return free_slots, len(all_events)
+    merged_slots = merge_intervals(free_slots)
+    final_slots = []
+    for start, end in merged_slots:
+        duration_minutes = (end - start).total_seconds() / 60
+        if duration_minutes >= min_duration_minutes:
+            final_slots.append((start, end))
+            
+    return final_slots, len(all_events)
 
 

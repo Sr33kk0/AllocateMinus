@@ -41,6 +41,7 @@ class CalculateRequest(BaseModel):
     end_date: Optional[str] = None
     start_hour: Optional[int] = 8
     end_hour: Optional[int] = 18
+    min_duration: int = 30
 
 @app.post("/api/calculate")
 def calculate_free_time(request_data: CalculateRequest):
@@ -57,7 +58,8 @@ def calculate_free_time(request_data: CalculateRequest):
             start_date=start_arrow,
             end_date=end_arrow,
             start_hour=request_data.start_hour,
-            end_hour=request_data.end_hour
+            end_hour=request_data.end_hour,
+            min_duration_minutes=request_data.min_duration
         )
         
         formatted_slots = []

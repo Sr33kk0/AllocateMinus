@@ -37,5 +37,3 @@ def read_and_print_ics_url(calendar_url):
         print(f"📍 Location: {event.location or 'No room assigned'}")
         print("-" * 40)
 
-
-    

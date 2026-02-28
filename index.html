@@ -163,6 +163,29 @@
                                         </div>
                                     </div>
                                 </div>
+
+                                <!-- Minimum Duration -->
+                                <div class="col-span-2 space-y-1.5 mt-2">
+                                    <label class="block text-xs font-medium text-slate-500 px-1">Minimum Meeting
+                                        Duration</label>
+                                    <div class="relative">
+                                        <select id="min-duration"
+                                            class="w-full px-3 py-2.5 rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all text-sm outline-none shadow-sm text-slate-700 appearance-none">
+                                            <option value="30" selected>30 Minutes</option>
+                                            <option value="60">1 Hour</option>
+                                            <option value="90">1.5 Hours</option>
+                                            <option value="120">2 Hours</option>
+                                        </select>
+                                        <div
+                                            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-slate-500">
+                                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 9l-7 7-7-7"></path>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
                         </div>
 
@@ -270,6 +293,7 @@
             const endInput = document.getElementById('end-date');
             const startHourInput = document.getElementById('start-hour');
             const endHourInput = document.getElementById('end-hour');
+            const minDurationInput = document.getElementById('min-duration');
 
             // Format YYYY-MM-DD for the HTML date inputs
             startInput.valueAsDate = todayObj;
@@ -293,6 +317,7 @@
                 const endDateStr = endInput.value;
                 const startHour = parseInt(startHourInput.value, 10);
                 const endHour = parseInt(endHourInput.value, 10);
+                const minDuration = parseInt(minDurationInput.value, 10);
 
                 const startD = new Date(startDateStr);
                 const endD = new Date(endDateStr);
@@ -317,7 +342,8 @@
                         start_date: startDateStr,
                         end_date: endDateStr,
                         start_hour: startHour,
-                        end_hour: endHour
+                        end_hour: endHour,
+                        min_duration: minDuration
                     };
 
                     const response = await fetch('/api/calculate', {
@@ -395,7 +421,7 @@
                             <svg class="w-6 h-6 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
                             <div>
                                 <h3 class="font-bold">No overlapping free time found!</h3>
-                                <p class="text-sm mt-1 opacity-90">There are no 30-minute intervals within the 8:00 AM to 6:00 PM boundary where everyone is free.</p>
+                                <p class="text-sm mt-1 opacity-90">There are no intervals matching your criteria within the boundaries where everyone is free.</p>
                             </div>
                         </div>
                     `;
