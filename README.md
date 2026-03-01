@@ -59,7 +59,7 @@ Want to try it out? You can run it as a standalone Windows app or host it on you
 
 1. **Clone the repository:**
    ```sh
-   git clone [https://github.com/Sr33kk0/AllocateMinus.git](https://github.com/Sr33kk0/AllocateMinus.git)
+   git clone https://github.com/Sr33kk0/AllocateMinus.git
    cd AllocateMinus
 
 2. **Create a virtual environment and activate it:**
