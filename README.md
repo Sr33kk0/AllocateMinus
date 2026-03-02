@@ -106,7 +106,7 @@ If using the compiled `.exe` version, simply double-click `AllocateMinus.exe` to
 - [x] Build RESTful API using FastAPI
 - [x] Create native Windows Executable via PyInstaller + PyWebView
 - [x] Implement **Interval Merging Algorithm** (Combine consecutive 30-min blocks into continuous sessions)
-- [ ] Add one-click **Google Calendar invite** generation
+- [x] Add one-click **Google Calendar invite** generation
 
 ---
 

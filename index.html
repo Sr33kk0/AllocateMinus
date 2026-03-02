@@ -46,7 +46,7 @@
                 AllocateMinus
             </h1>
             <p class="text-lg text-slate-600 max-w-2xl mx-auto">
-                Paste your group's Monash Allocate+ `.ics` links below to instantly find overlapping free time.
+                Paste your group's `.ics` links below to instantly find overlapping free time.
             </p>
         </div>
 
@@ -402,7 +402,11 @@
                     // Format time cleanly e.g. "08:30 AM"
                     const timeWindow = `${dateObj.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })} - ${new Date(slot.end_iso).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}`;
 
-                    grouped[dayKey].push(timeWindow);
+                    grouped[dayKey].push({
+                        timeWindow: timeWindow,
+                        start_iso: slot.start_iso,
+                        end_iso: slot.end_iso
+                    });
                 });
                 return grouped;
             }
@@ -441,11 +445,11 @@
                                 ${day}
                             </h3>
                             <div class="flex flex-wrap gap-2">
-                                ${timeSlots.map(time => `
-                                    <div class="bg-white border text-center border-indigo-100 hover:border-indigo-300 text-indigo-700 font-medium text-sm py-2 px-3.5 rounded-lg shadow-sm hover:shadow-md transition-all cursor-default flex items-center group">
+                                ${timeSlots.map(slot => `
+                                    <a href="/schedule?start=${encodeURIComponent(slot.start_iso)}&end=${encodeURIComponent(slot.end_iso)}" title="Schedule this time block" class="bg-white border text-center border-indigo-100 hover:border-indigo-400 hover:bg-indigo-50 text-indigo-700 font-medium text-sm py-2 px-4 rounded-lg shadow-sm hover:shadow-md transition-all cursor-pointer flex items-center group">
                                         <svg class="w-3.5 h-3.5 mr-1.5 opacity-60 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                                        ${time}
-                                    </div>
+                                        ${slot.timeWindow}
+                                    </a>
                                 `).join('')}
                             </div>
                         </div>
@@ -472,6 +476,8 @@
                     </div>
                 `;
             }
+
+            // Removed inline Google Calendar scheduling function -> Replaced by /schedule route
         });
     </script>
 

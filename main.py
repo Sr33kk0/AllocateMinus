@@ -35,6 +35,16 @@ def read_root():
     except FileNotFoundError:
         return "<h1>Welcome to AllocateMinus API</h1><p>index.html was not found alongside the executable.</p>"
 
+@app.get("/schedule", response_class=HTMLResponse)
+def read_schedule():
+    schedule_path = get_resource_path("schedule.html")
+    
+    try:
+        with open(schedule_path, "r", encoding="utf-8") as f:
+            return f.read()
+    except FileNotFoundError:
+        return "<h1>Schedule Page Not Found</h1>"
+
 class CalculateRequest(BaseModel):
     urls: List[str]
     start_date: Optional[str] = None
